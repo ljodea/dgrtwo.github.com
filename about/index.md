@@ -15,8 +15,6 @@ Software
 Links
 =====
 
-* [My CV](/files/DavidRobinsonResume.pdf)
-
 * [My GitHub](https://github.com/ljodea)
 
 About This Site
