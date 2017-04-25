@@ -1,12 +1,12 @@
 # Site wide configuration
 
-title:            Variance Explained
-locale:           en_US
-url:              http://varianceexplained.org
+title:            STATEGY
+locale:           en_UK
+url:              http://state.gy
 # url:              http://localhost:4000
 
-name: Variance Explained
-description: Thoughts on statistics, data science, computational biology, education, and R
+name: Liam O'Dea
+description: This is the blog and personal website of Liam O'Dea.
 
 # Jekyll configuration
 
@@ -29,12 +29,12 @@ kramdown:
 
 # Site owner
 owner:
-  name: David Robinson
-  avatar: david_robinson_picture2.jpg
-  bio: "Data Scientist at Stack Overflow, works in R and Python."
-  email: drobinson@stackoverflow.com
-  disqus-shortname: varianceexplained
-  twitter: drob
+  name: Liam O'Dea
+  avatar: 
+  bio: "MIT-trained Data Scientist, works mostly in R."
+  email: liamjodea@gmail.com
+  disqus-shortname: stategy
+  twitter:
   facebook: #username
   google:
     plus: #username
@@ -43,8 +43,8 @@ owner:
     ad-client: 
     ad-slot: 
   bing-verify: 
-  github: dgrtwo
-  stackoverflow: 712603
+  github: ljodea
+  stackoverflow:
   linkedin: 
   instagram: #username
   lastfm: #username
