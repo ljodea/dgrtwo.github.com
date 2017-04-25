@@ -3,11 +3,5 @@
 - title: About Me
   url: /about/
 
-- title: Posts
+- title: Projects
   url: /posts/
-
-- title: R Course
-  url: /RData/
-
-- title: Introduction to Empirical Bayes
-  url: /r/empirical-bayes-book/
