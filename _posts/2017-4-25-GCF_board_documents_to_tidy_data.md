@@ -177,12 +177,12 @@ Let's verify that our data set is now tidy, by pulling out some rows at random.
 
 Every observation is a now a single token, which is what we wanted. Great! We're done here and can move on to more interesting analysis of the data.
 
-For ideas on how to use the data set for analysis, see my post on [exploratory data analysis of the gcfboardr dataset](http://state.gy).  
+For ideas on how to use the data set for analysis, see my post on [exploratory data analysis of the gcfboardr dataset](http://state.gy/r/exploratory_data_analysis_of_board_documents_at_the_green_climate_fund/).  
   
 
 ***
 ##### Notes
 
-[1] Users should be aware that there are some issues with the data from B.03, a board meeting which was documented using an unknown process for creating Pdf documents. This set of Pdf documents caused some parsing problems for the `pdftools` package, resulting in garbled word tokens. As such, gcfboardr does not contain any documents from the B.03 board meeting.  
+1. Users should be aware that there are some issues with the data from B.03, a board meeting which was documented using an unknown process for creating Pdf documents. This set of Pdf documents caused some parsing problems for the `pdftools` package, resulting in garbled word tokens. As such, gcfboardr does not contain any documents from the B.03 board meeting.  
 
-[2] On github, I've also included the R script documenting how I harvested all the files from the GCF website and pulled the text out of them. The script includes a few functions I wrote, such as the pdf_date function, which makes it easier to pull "creation date" metadata out of pdfs, using a method which works well with the map family of functions from purrr. This means that unlike the pdf_info function in the pdftools package, it can be used when building a data frame using dplyr. You can find that script [here](https://github.com/ljodea/gcfboardr/blob/master/data-raw/prep_data.R).
+2. On github, I've also included the R script documenting how I harvested all the files from the GCF website and pulled the text out of them. The script includes a few functions I wrote, such as the pdf_date function, which makes it easier to pull "creation date" metadata out of pdfs, using a method which works well with the map family of functions from purrr. This means that unlike the pdf_info function in the pdftools package, it can be used when building a data frame using dplyr. You can find that script [here](https://github.com/ljodea/gcfboardr/blob/master/data-raw/prep_data.R).

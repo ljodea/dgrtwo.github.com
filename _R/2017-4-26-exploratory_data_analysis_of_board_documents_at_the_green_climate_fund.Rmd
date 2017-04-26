@@ -121,7 +121,7 @@ It looks like each group of board meeting documents in our data set obeys Zipf's
 
 ## Single Word Analysis
 
-So far we've been looking at lines, documents and meetings, but what we'd really like to look at is the words themselves. So let's unnest the words from their lines and remove some "stop words" -- words such as "and" "the" or "a" using an `anti_join` from the dplyr package.
+So far we've been looking at lines, documents and meetings, but what we'd really like to look at is the words themselves. So let's unnest the words from their lines and remove some "stop words" -- words such as "and" "the" or "a" -- using an `anti_join` from the dplyr package.
 
 ```{r munging, echo=TRUE, message=FALSE}
 # Load a table of 1,149 common stop words
