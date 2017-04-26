@@ -150,14 +150,61 @@ Let's verify that our data set is now tidy, by pulling out some rows at random.
 ```
 
 
-Every observation is a now a single token, which is what we wanted. Great! We're done here and can move on to more interesting analysis of the data.
+Every observation is a now a single token, which is what we wanted. Great! 
+
+***
+
+### Is our data reasonable?
+
+When we're first looking at this data set, we might want to know whether our data is normal for a large corpus, and Zipf's Law is one yardstick we might use. Zipf's Law states that given a corpus of natural language text, the frequency of any word is inversely proportional to its rank in the frequency table. This is a power law, and it implies that the most common word appears roughly twice as often in a corpus than the 2nd most common word, and three times as often as the 3rd most common word, and so on. 
+
+If this relationship holds for our data, we can proceed. If it doesn't we might have some problematic documents (this was the case for B.03, which has some badly formatted text). Let's check the data, grouping by board meeting. 
+
+
+```{r zipf, echo=FALSE}
+# Zipf's law ------
+library(tidytext)
+library(stringr)
+
+bm_words <- gcfboard_docs %>%
+  mutate(text = str_replace_all(text, "[[:digit:]]", "")) %>% 
+  unnest_tokens(word, text) %>%
+  count(meeting, word, sort = TRUE) %>%
+  ungroup()
+
+total_words <- bm_words %>%
+  group_by(meeting) %>%
+  summarize(total = sum(n))
+
+bm_words <- left_join(bm_words, total_words) # this is purely to calculate Zipf's law
+
+freq_by_rank <- bm_words %>%
+  group_by(meeting) %>%
+  mutate(rank = row_number(),
+         `term frequency` = n/total)
+freq_by_rank %>%
+  ggplot(aes(rank, `term frequency`, color = meeting)) +
+  geom_line(size = 1.2, alpha = 0.8) +
+  geom_abline(intercept = -0.62, slope = -1.1, color = "gray50", linetype = 2) +
+  scale_x_log10() +
+  scale_y_log10() # B.04 probably contains misspelt or mis-read words
+
+```
+
+It looks like each group of board meeting documents in our data set obeys Zipf's law! This means that, without reading any documents, groups of documents belonging to each board meeting conform to out expectations about what a corpus should look like. There are no significant distortions in the text.
+
+We're done here and can move on to more interesting analysis of the data.
 
 For ideas on how to use the data set for analysis, see my post on [exploratory data analysis of the gcfboardr dataset](http://state.gy).  
-  
 
 ***
 ##### Notes
 
-[1] Users should be aware that there are some issues with the data from B.03, a board meeting which was documented using an unknown process for creating Pdf documents. This set of Pdf documents caused some parsing problems for the `pdftools` package, resulting in garbled word tokens. As such, gcfboardr does not contain any documents from the B.03 board meeting.  
+1. Users should be aware that there are some issues with the data from B.03, a board meeting which was documented using an unknown process for creating Pdf documents. This set of Pdf documents caused some parsing problems for the `pdftools` package, resulting in garbled word tokens. As such, gcfboardr does not contain any documents from the B.03 board meeting.
 
-[2] On github, I've also included the R script documenting how I harvested all the files from the GCF website and pulled the text out of them. The script includes a few functions I wrote, such as the pdf_date function, which makes it easier to pull "creation date" metadata out of pdfs, using a method which works well with the map family of functions from purrr. This means that unlike the pdf_info function in the pdftools package, it can be used when building a data frame using dplyr. You can find that script [here](https://github.com/ljodea/gcfboardr/blob/master/data-raw/prep_data.R).
+2. Zipf's Law is a simple power law:
+
+$$f(k;s,N)=\frac{1/k^s}{\sum_{n=1}^N (1/n^s)}$$
+
+
+3. On github, I've also included the R script documenting how I harvested all the files from the GCF website and pulled the text out of them. The script includes a few functions I wrote, such as the pdf_date function, which makes it easier to pull "creation date" metadata out of pdfs, using a method which works well with the map family of functions from purrr. This means that unlike the pdf_info function in the pdftools package, it can be used when building a data frame using dplyr. You can find that script [here](https://github.com/ljodea/gcfboardr/blob/master/data-raw/prep_data.R).

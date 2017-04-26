@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Exploratory Data Analysis of Board Documents at The Green Climate Fund"
+title:  "Exploratory Data Analysis: The Green Climate Fund"
 date:   2017-4-26 17:55:01 +0900
 category: r
 tags: [r]
@@ -11,15 +11,15 @@ comments: true
 
 
 
-# Introducing gcfboardr 
+Recently, I harvested over 500,000 lines of text from 500+ Green Climate Fund board documents. Because of this, I've  built a data-only R package called `gcfboardr`, so that anyone can make use of the corpus I've created without going through the harvesting process.
 
-In a previous post, I introduced `gcfboardr` a package I'd written which holds Green Climate Fund (GCF) board documents, ready for for text analysis.
+To build the data, I used documents produced for board meetings, available [here on the GCF website](http://http://www.greenclimate.fund/boardroom/board-meetings/documents). I've read some of these documents before, and it occured me that the Fund will produce more text than anyone can read in a lifetime. So I've used my natural curiosity about the Fund as a motivating project with which to practice the tidytext approach to text mining and gain deeper insight into the Fund.
 
-By looking at the most important GCF documents we might be able to get a sense of priorities at the Fund, including changes over time.
+In this post, I'm going to show what can be done with gcfboardr.
 
-I recommend using this data with the `tidytext` R package. Combining several smaller functions from `tidytext` and `dplyr` allows you to produce powerful transformations of text data. This is exactly what I'm going to do below.
+***
 
-### How to install
+### Installation
 
 To install the gcfboardr package you'll need to have the devtools package installed, and then install gcfboardr from github using the following code:
 
@@ -34,7 +34,9 @@ library(gcfboardr)
 data("gcfboard_docs")
 {% endhighlight %}
 
-## What's in the gcfboardr data set?
+***
+
+### Preview
 
 Let's load up a few libraries and take a glimpse at the data:
 
@@ -50,45 +52,32 @@ glimpse(gcfboard_docs)
 
 
 {% highlight text %}
-## Observations: 493,262
+## Observations: 490,537
 ## Variables: 3
-## $ text    <chr> "Date: 1 March 2017", "Reference: ", "Sixteenth Meeting of the Board", "4 – 6 A...
-## $ meeting <fctr> B.16, B.16, B.16, B.16, B.16, B.16, B.16, B.16, B.16, B.16, B.16, B.16, B.16, ...
 ## $ title   <fctr> Sixteenth Meeting of the Board, Sixteenth Meeting of the Board, Sixteenth Meet...
+## $ meeting <fctr> B.16, B.16, B.16, B.16, B.16, B.16, B.16, B.16, B.16, B.16, B.16, B.16, B.16, ...
+## $ text    <chr> "Date:  March ", "Reference: ", "Sixteenth Meeting of the Board", " –  April ",...
 {% endhighlight %}
 
 We have almost 500,000 observations of three variables, in which every observation is a line from an original document. How many documents are there per meeting?
 
 ![center](/figs/2017-4-26-exploratory_data_analysis_of_board_documents_at_the_green_climate_fund/docspm-1.png)
 
-We can see that B.08 and B.11 were particularly prolific, and the early meetings produced far less text than the later ones. 
-B.08 was the first board meeting of 2014, the year the Fund started operations, and it produce more than double the documents from the previous meeting! 
+We can see that B.08 and B.11 were particularly prolific, and the early meetings produced fewer docs than the later ones. B.08 was the third board meeting of 2014, the year the Fund started operations, and it produced more than double the documents from the previous meeting!
 
-### Are board meetings reasonable groupings of text suitable for analysis?
+***
 
-When we're first looking at this data set, we might want to know whether our data is normal for a large corpus, and Zipf's Law is one yardstick we might use. Zipf's Law states that given a corpus of natural language text, the frequency of any word is inversely proportional to its rank in the frequency table. This is a power law, and it implies that the most common word appears roughly twice as often in a corpus than the 2nd most common word, and three times as often as the 3rd most common word, and so on. 
+## EDA of One Variable: Single Words
 
-If this relationship holds for our data, we can proceed. If it doesn't we might have some problematic documents (this was the case for B.03, which has some badly formatted text). Let's check the data, grouping by board meeting. 
-
-
-![center](/figs/2017-4-26-exploratory_data_analysis_of_board_documents_at_the_green_climate_fund/zipf-1.png)
-
-It looks like each group of board meeting documents in our data set obeys Zipf's law! This means that, without reading any documents, groups of documents belonging to each board meeting conform to out expectations about what a corpus should look like. There are no significant distortions in the text and we can move on to more interesting analysis.
-
-
-## Single Word Analysis
-
-So far we've been looking at lines, documents and meetings, but what we'd really like to look at is the words themselves. So let's unnest the words from their lines and remove some "stop words" -- words such as "and" "the" or "a" using an `anti_join` from the dplyr package.
+So far we've been looking at lines, documents and meetings, but what we'd really like to look at is the words themselves. So let's unnest the words from their lines and remove some "stop words" -- words such as "and" "the" or "a" -- using an `anti_join` from the dplyr package.
 
 
 {% highlight r %}
 # Load a table of 1,149 common stop words
 data(stop_words)
 
-# Filter out numbers and empty lines, then unnest tokens and anti_join a table of stop words
+# Unnest word tokens and anti_join a table of stop words
 gcf_tidy <- gcfboard_docs %>%
-  mutate(text = str_replace_all(text, "[[:digit:]]", "")) %>% 
-  filter(text != "") %>% 
   unnest_tokens(word, text) %>% 
   anti_join(stop_words)
 glimpse(gcf_tidy)
@@ -99,22 +88,34 @@ glimpse(gcf_tidy)
 {% highlight text %}
 ## Observations: 2,661,944
 ## Variables: 3
-## $ meeting <fctr> B.01, B.01, B.01, B.01, B.01, B.01, B.01, B.01, B.01, B.01, B.01, B.01, B.01, ...
 ## $ title   <fctr> Roles and Responsibilities of the Board, Annotations to the Provisional Agenda...
+## $ meeting <fctr> B.01, B.01, B.01, B.01, B.01, B.01, B.01, B.01, B.01, B.01, B.01, B.01, B.01, ...
 ## $ word    <chr> "meritbased", "contd", "realestate", "worldclass", "spacious", "itower", "itowe...
 {% endhighlight %}
 
-Even after we removed a list of 1,149 common stop words, the new tidy dataframe contains over 2.6 million words! Now let's look at the counts of remaining words, sorted by the number of times they appear in the text. 
+Even after we removed every instance of common stop words, the new tidy dataframe contains over 2.6 million words! Now let's look at the counts of remaining words, sorted by the number of times they appear in the text. 
 
 ![center](/figs/2017-4-26-exploratory_data_analysis_of_board_documents_at_the_green_climate_fund/common words-1.png)
 
 It looks like some words appear very often, in particular words associated with the name of the fund, although the word "green" is relatively less used than are the words "climate" and "fund".
 
-### How many times does the phrase "Green Climate Fund" appear?
-
 We might want to disambiguate uses of the word "climate" between uses which add important context to our analysis, and uses which just repeat the name of the fund.
 
 To solve this problem, we're going to to see how many times the words "Green Climate Fund" appear in sequence:
+
+
+{% highlight r %}
+# How many times does the trigram "Green Climate Fund" appear?
+gcf_name_trigram <- gcfboard_docs %>%
+  unnest_tokens(trigram, text, token = "ngrams", n = 3) %>%
+  separate(trigram, c("word1", "word2", "word3"), sep = " ") %>%
+  filter(word1 == "green",
+         word2 == "climate",
+         word3 == "fund") %>%
+  count(word1, word2, word3, sort = TRUE)
+gcf_name_trigram
+{% endhighlight %}
+
 
 
 {% highlight text %}
@@ -127,6 +128,19 @@ To solve this problem, we're going to to see how many times the words "Green Cli
 {% endhighlight %}
 
 Now we can see that 6,310 uses of each word "green", "climate" and "fund" are repetitions of the fund name. So how many uses are there in other contexts?
+
+
+{% highlight r %}
+gcf_name_disambiguation <- gcf_tidy %>%
+  count(word, sort = TRUE) %>%
+  filter(word == "green" | word == "climate" | word == "fund") %>%
+  transmute(word,
+         `basic count` = n,
+         `name context` = 6310,
+         `other contexts` = `basic count` - `name context`)
+gcf_name_disambiguation
+{% endhighlight %}
+
 
 
 {% highlight text %}
@@ -142,19 +156,20 @@ We can see that "green" occurs rarely in contexts other than the name context. T
 
 Now we can find out the relative importance of the word "climate", disambiguated from usage which is just a repetition of the fund's name. 
 
-
 ![center](/figs/2017-4-26-exploratory_data_analysis_of_board_documents_at_the_green_climate_fund/tidycount2-1.png)
 
-Wow! It turns out that the word "climate", independent of usage as part of the name of the Fund, is the third most common word. It's a good job we didn't remove it out of hand. 
+Wow! It turns out that the word "climate", independent of usage as part of the name of the Fund, is the third most common word. 
 
 You might wonder why we didn't remove the word "project" since it is so common. This is because frequency of usage has changed a lot over time, unlike the other words we removed.
+
+***
 
 ### How has word usage changed over time?
 
 
 
 
-Let's look at changes in usage for a few words which might be interesting to us: "secretariat", "project" and "risk".   
+Let's look at changes in usage for a few words which might be interesting to us: "secretariat", "project" and "risk".
 
 Plotting statistical transformations of word frequency can help us see these changes over time. Below you can see the bare frequenciess on top, followed by a log10 scale in the middle, and finally a squre root coordinate transform beneath.
 
@@ -163,15 +178,17 @@ Plotting statistical transformations of word frequency can help us see these cha
 
 All plots show that since the Fund became operational in 2014, use of the word "project" has surged. 
 
-At earlier meetings, establishing a secretariat was priority number one, and we can see usage declining over time. "Risk" begins to become much more important at B.07, which is when the Fund adopted a risk management framework.    
+At earlier meetings, establishing a secretariat was priority number one, and we can see usage declining over time. "Risk" begins to become much more important at B.07, which is when the Fund adopted an investment framework, a financial risk management framework, and a results management framework.
 
 You'll notice that the bare frequency plot emphasises the high-frequency changes to the words "secretariat" and "project", whereas the log10 plot of word frequency really helps us see what's happening at the low-end of the frequency range. The square-root coordinate transform preserves some of the perspective of both the other plots, and might be the most useful plot of the three.
 
-### What does single word analysis say about different board meetings?
+***
+
+### Word Frequency
 
 We might want to look at board meetings as a facet of our single word analysis. Which words are particularly associated with specific meeetings? To find this out we can use common rules-of-thumb: term frequency and it's cousin, inverse-document frequency.
 
-Computing this with the `bind_tf_idf` function from the tidytext package, we get a data table which shows the words which are associatd in particular with one meeting. 
+Computing these with the `bind_tf_idf` function from the tidytext package, we get a data table which shows the words which are associatd in particular with one meeting. 
 
 
 {% highlight text %}
@@ -197,25 +214,27 @@ We can then plot this data, faceting by meeting and picking the top 5 terms asso
 
 That's a lot of acronyms! If we look into the board documents themselves, we can see that these acronyms tend to denote real organizations or operational units at the fund. For example:
 
-* at B.16, the top term is "geeref", which stands for "Global Energy Efficiency and Renewable Energy Fund"
-* and at B.06, where the top term is "iiu", this refers to the "Independent Integrity Unit" (IIU), which is one of three accountability units at the fund. 
+* At B.16, the top term is "geeref", which is the ["Global Energy Efficiency and Renewable Energy Fund"](http://geeref.com/), a Public-Private Partnership which makes equity investments in clean energy in developing countries.
+* At B.06, where the top term is "iiu", this refers to the ["Independent Integrity Unit" (IIU)](http://www.greenclimate.fund/independent-integrity-unit), which is one of three accountability units at the fund. 
 
 This means that relative to other board meetings, the IIU and GEEREF were a particularly important topics at the sixth and sixteenth meetings of the board respectively.
 
-### How similar are individual board meetings?
+***
 
-We can also look at frequencies of words between meeting pairs. Words that are common to one meeting are common to another, and cancel each other out, leaving interesting words at the margins.
+### Word Correlation
+
+We can also look at correlation in word frequency between pairs of meetings. Words that are common to one meeting are common to another, and cancel each other out, leaving interesting words at the margins.
 
 Let's use a 45 degree dashed line to denote equal frequency in word usage. This means that:
 
 * words above the line appear more commonly in B.16 board documents than in the comparison group, while 
 * words below the line appear more frequently in the comparison group than at B.16 (check the label above the plot to find which board meeting is used as the comparison). 
 
-For example, in the first plot below we see that "co-chairs" was a big issue at B.01 (below the line), while it wasn't at B.16. In contrast, B.16 (above the line) had a greater focus on "women", "water" and "projects" than did B.01.
+For example, in the first plot below we see (below the line) that "co-chairs" was a big issue at B.01, while it wasn't at B.16. In contrast, B.16 (above the line) had a greater focus on "women", "water" and "projects" than did B.01.
 
 ![center](/figs/2017-4-26-exploratory_data_analysis_of_board_documents_at_the_green_climate_fund/frequencies-1.png)
 
-We can see that:
+We can also see that:
 
 * B.01 was focused on finding a "host" country and establishing a "secretariat",
 * B.10 was relatively more concerned with "accountability" and "accreditation" than was B.16,
@@ -225,7 +244,7 @@ By looking at the spread of the data, we can also see that correlation between w
 
 We can confirm this intuition by looking at Pearson's product-moment correlations between B.16 and previous meetings:
 
-* First between **B.01 and B.16**: correlation is about 32%
+* between **B.01 and B.16**: correlation is about 32%
 
 {% highlight text %}
 ## 
@@ -241,7 +260,7 @@ We can confirm this intuition by looking at Pearson's product-moment correlation
 ## 0.3162027
 {% endhighlight %}
 
-* Next between **B.10 and B.16**: correlation is about 62%
+* between **B.10 and B.16**: correlation is about 62%
 
 {% highlight text %}
 ## 
@@ -257,7 +276,7 @@ We can confirm this intuition by looking at Pearson's product-moment correlation
 ## 0.6218376
 {% endhighlight %}
 
-* Last, between **B.15 and B.16**: correlation is about 92%
+* between **B.15 and B.16**: correlation is about 92%
 
 {% highlight text %}
 ## 
@@ -283,11 +302,7 @@ That's enough for one post! For more ideas about how to analyze this data set be
 
 ### Notes
 
-* Zipf's Law is a simple power law:
-
-$$f(k;s,N)=\frac{1/k^s}{\sum_{n=1}^N (1/n^s)}$$
-
-* **Term frequency (tf)**, measures how frequently a word occurs in a document. However, even after we remove words such as “and”, “the”, "a”, et cetera, there are some words which will occur much more often than others, so it's not much use on its own.
+* **Term frequency (tf)**, measures how frequently a word occurs in a document. However, even after we remove stop words, there are always some words which will occur far more often than others, so it's not much use on its own.
 
 $$tf(\text{word}) = (\frac{n_{\text{word}}}{n_{\text{total words in document}}})$$  
 

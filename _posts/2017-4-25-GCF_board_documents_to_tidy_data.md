@@ -175,14 +175,38 @@ Let's verify that our data set is now tidy, by pulling out some rows at random.
 {% endhighlight %}
 
 
-Every observation is a now a single token, which is what we wanted. Great! We're done here and can move on to more interesting analysis of the data.
+Every observation is a now a single token, which is what we wanted. Great! 
 
-For ideas on how to use the data set for analysis, see my post on [exploratory data analysis of the gcfboardr dataset](http://state.gy/r/exploratory_data_analysis_of_board_documents_at_the_green_climate_fund/).  
-  
+***
+
+### Is our data reasonable?
+
+When we're first looking at this data set, we might want to know whether our data is normal for a large corpus, and Zipf's Law is one yardstick we might use. Zipf's Law states that given a corpus of natural language text, the frequency of any word is inversely proportional to its rank in the frequency table. This is a power law, and it implies that the most common word appears roughly twice as often in a corpus than the 2nd most common word, and three times as often as the 3rd most common word, and so on. 
+
+If this relationship holds for our data, we can proceed. If it doesn't we might have some problematic documents (this was the case for B.03, which has some badly formatted text). Let's check the data, grouping by board meeting. 
+
+
+
+{% highlight text %}
+## Joining, by = "meeting"
+{% endhighlight %}
+
+![center](/figs/2017-4-25-GCF_board_documents_to_tidy_data/zipf-1.png)
+
+It looks like each group of board meeting documents in our data set obeys Zipf's law! This means that, without reading any documents, groups of documents belonging to each board meeting conform to out expectations about what a corpus should look like. There are no significant distortions in the text.
+
+We're done here and can move on to more interesting analysis of the data.
+
+For ideas on how to use the data set for analysis, see my post on [exploratory data analysis of the gcfboardr dataset](http://state.gy).  
 
 ***
 ##### Notes
 
-1. Users should be aware that there are some issues with the data from B.03, a board meeting which was documented using an unknown process for creating Pdf documents. This set of Pdf documents caused some parsing problems for the `pdftools` package, resulting in garbled word tokens. As such, gcfboardr does not contain any documents from the B.03 board meeting.  
+1. Users should be aware that there are some issues with the data from B.03, a board meeting which was documented using an unknown process for creating Pdf documents. This set of Pdf documents caused some parsing problems for the `pdftools` package, resulting in garbled word tokens. As such, gcfboardr does not contain any documents from the B.03 board meeting.
 
-2. On github, I've also included the R script documenting how I harvested all the files from the GCF website and pulled the text out of them. The script includes a few functions I wrote, such as the pdf_date function, which makes it easier to pull "creation date" metadata out of pdfs, using a method which works well with the map family of functions from purrr. This means that unlike the pdf_info function in the pdftools package, it can be used when building a data frame using dplyr. You can find that script [here](https://github.com/ljodea/gcfboardr/blob/master/data-raw/prep_data.R).
+2. Zipf's Law is a simple power law:
+
+$$f(k;s,N)=\frac{1/k^s}{\sum_{n=1}^N (1/n^s)}$$
+
+
+3. On github, I've also included the R script documenting how I harvested all the files from the GCF website and pulled the text out of them. The script includes a few functions I wrote, such as the pdf_date function, which makes it easier to pull "creation date" metadata out of pdfs, using a method which works well with the map family of functions from purrr. This means that unlike the pdf_info function in the pdftools package, it can be used when building a data frame using dplyr. You can find that script [here](https://github.com/ljodea/gcfboardr/blob/master/data-raw/prep_data.R).
