@@ -144,7 +144,7 @@ gcf_tidy <- gcfboard_docs %>%
 
 Now let's visualize counts of the remaining words:
 
-![center](/figs/2017-4-25-GCF_board_documents_to_tidy_data/unnamed-chunk-5-1.png)
+![center](/figs/2017-4-25-GCF_board_documents_to_tidy_data/unnamed-chunk-39-1.png)
 
 That's better! It looks like the GCF is very project-focused. 
 
@@ -197,7 +197,7 @@ It looks like each group of board meeting documents in our data set obeys Zipf's
 
 We're done here and can move on to more interesting analysis of the data.
 
-For ideas on how to use the data set for analysis, see my post on [exploratory data analysis of the gcfboardr dataset](http://state.gy).  
+For ideas on how to use the data set for analysis, see my post on [exploratory data analysis of the gcfboardr dataset](http://state.gy/r/exploratory_data_analysis_of_board_documents_at_the_green_climate_fund/).  
 
 ***
 ##### Notes
