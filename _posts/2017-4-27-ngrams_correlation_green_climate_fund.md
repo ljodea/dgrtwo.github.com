@@ -14,7 +14,7 @@ comments: true
 
 Last time we looked at a [single-word analysis](http://state.gy/r/exploratory_data_analysis_of_board_documents_at_the_green_climate_fund/) of the gcfboardr dataset. However, more interesting avenues for analysis open up when we consider relationships between words, in particular between pairs of words.
 
-In this post, we'll look at bigrams, create some network graphs to plot relationships among many words.
+In this post, we'll look at bigrams and use network graphs to plot relationships among many words.
 
 ***
 
@@ -22,7 +22,7 @@ In this post, we'll look at bigrams, create some network graphs to plot relation
 
 A bigram is a pair of words which occur together in sequence, and a trigram is the same concept extended to word triplets. "N-grams" are a generalization of this concept, although in practice most analyses restrict the "n" to a maximum of three. 
 
-Let's load the dataset.
+Let's load the dataset:
 
 
 {% highlight r %}
@@ -88,18 +88,18 @@ bigrams_united
 
 {% highlight text %}
 ## # A tibble: 1,276,503 × 3
-##                bigram meeting                                                    title
-## *               <chr>  <fctr>                                                   <fctr>
-## 1         board march    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
-## 2           march rev    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
-## 3          rev songdo    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
-## 4      songdo incheon    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
-## 5    incheon republic    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
-## 6   korea provisional    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
-## 7  provisional agenda    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
-## 8         agenda item    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
-## 9      board proposal    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
-## 10     chairs summary    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
+##                  bigram meeting                                      title
+## *                 <chr>  <fctr>                                     <fctr>
+## 1      additional rules    B.01 Additional Rules of Procedure of the Board
+## 2             board gcf    B.01 Additional Rules of Procedure of the Board
+## 3        august meeting    B.01 Additional Rules of Procedure of the Board
+## 4          board august    B.01 Additional Rules of Procedure of the Board
+## 5         august geneva    B.01 Additional Rules of Procedure of the Board
+## 6    geneva switzerland    B.01 Additional Rules of Procedure of the Board
+## 7    switzerland agenda    B.01 Additional Rules of Procedure of the Board
+## 8           agenda item    B.01 Additional Rules of Procedure of the Board
+## 9              item gcf    B.01 Additional Rules of Procedure of the Board
+## 10 recommended decision    B.01 Additional Rules of Procedure of the Board
 ## # ... with 1,276,493 more rows
 {% endhighlight %}
 
@@ -124,7 +124,9 @@ plot_bigram_tf_idf <- bigram_tf_idf %>%
   mutate(bigram = factor(bigram, levels = rev(unique(bigram))))
 {% endhighlight %}
 
-Let's plot top bigrams by frequency (tfidf) faceting to select a few meetings:
+Let's plot top bigrams by frequency faceting to select a few meetings:  
+
+
 
 ![center](/figs/2017-4-27-ngrams_correlation_green_climate_fund/faceted_bigram_tfidf-1.png)
 
@@ -152,9 +154,12 @@ Interesting! Risk bigrams in which the word "risk" comes first tend to refer to 
 
 ### Correlation 
 
-Knowing how often words appear together is neat but not very useful because some words, such as "project", appear so often that it's not clear whether a bigram involving them can tell us anything. One example you may have noticed above is "project page" -- it occurs often and it's irrelevant. Instead, we might be more interested in asking how often words appear together relative to how often they appear separately. 
+Knowing how often words appear together is neat but not very useful because some words, such as "project", appear so often that it's not clear whether a bigram involving them can tell us anything. One example you may have noticed above is "project page" -- it occurs often and it is meaningless.
 
-We can check correlation between word pairs using the `pairwise_cor` function from the widyr package:
+Avoiding such problematic words when we look at bigrams involves asking how often words appear together relative to how often they appear separately. 
+
+We can provide an answer by checking correlation between word pairs using the `pairwise_cor` function from the widyr package:
+
 
 {% highlight r %}
 # load widyr
@@ -270,7 +275,7 @@ The other cluster contains bigrams such as:
 * "financial exposure" and
 * "applicant provided".
 
-These are the kind of terms we'd expect to see in a cluster relating to **decisions on accreditation**!
+These are the kind of terms we'd expect to see in a cluster relating to **decisions on accreditation**.
 
 There are also a couple of smaller clusters: one relating to bigrams such as "fiduciary standard" and "funding allocation". Another one contains bigrams such as "climate resilient", "paradigm shift" and "sustainable development". It's a little harder to tell what these clusters represent because we have fewer "edges" to reason with.
 

@@ -36,7 +36,7 @@ gcfboard_docs <- gcfboard_docs %>%
 
 Last time we looked at a [single-word analysis](http://state.gy/r/exploratory_data_analysis_of_board_documents_at_the_green_climate_fund/) of the gcfboardr dataset. However, more interesting avenues for analysis open up when we consider relationships between words, in particular between pairs of words.
 
-In this post, we'll look at bigrams, create some network graphs to plot relationships among many words.
+In this post, we'll look at bigrams and use network graphs to plot relationships among many words.
 
 ***
 
@@ -44,7 +44,7 @@ In this post, we'll look at bigrams, create some network graphs to plot relation
 
 A bigram is a pair of words which occur together in sequence, and a trigram is the same concept extended to word triplets. "N-grams" are a generalization of this concept, although in practice most analyses restrict the "n" to a maximum of three. 
 
-Let's load the dataset.
+Let's load the dataset:
 
 ```{r bigraminit, echo=TRUE, eval=FALSE}
 # Load libraries and the gcfboardr data set
@@ -102,7 +102,9 @@ plot_bigram_tf_idf <- bigram_tf_idf %>%
   mutate(bigram = factor(bigram, levels = rev(unique(bigram))))
 ```
 
-Let's plot top bigrams by frequency (tfidf) faceting to select a few meetings:
+Let's plot top bigrams by frequency faceting to select a few meetings:  
+
+
 
 ```{r faceted_bigram_tfidf}
 # What can we ascertain about particular issues at board meetings using bigrams?
@@ -184,9 +186,12 @@ Interesting! Risk bigrams in which the word "risk" comes first tend to refer to 
 
 ### Correlation 
 
-Knowing how often words appear together is neat but not very useful because some words, such as "project", appear so often that it's not clear whether a bigram involving them can tell us anything. One example you may have noticed above is "project page" -- it occurs often and it's irrelevant. Instead, we might be more interested in asking how often words appear together relative to how often they appear separately. 
+Knowing how often words appear together is neat but not very useful because some words, such as "project", appear so often that it's not clear whether a bigram involving them can tell us anything. One example you may have noticed above is "project page" -- it occurs often and it is meaningless.
 
-We can check correlation between word pairs using the `pairwise_cor` function from the widyr package:
+Avoiding such problematic words when we look at bigrams involves asking how often words appear together relative to how often they appear separately. 
+
+We can provide an answer by checking correlation between word pairs using the `pairwise_cor` function from the widyr package:
+
 ```{r widyr, echo=TRUE}
 # load widyr
 library(widyr)
@@ -223,7 +228,7 @@ It looks like the words "paradigm" and "shift" occur in the same document togeth
 
 Now that we have a word correlation table, we can look up specific correlations among words. For example, let's look at pairwise correlations for the words "risk", "social" and "private".
 
-```{r wordcors, message=FALSE}
+```{r wordcors, message=FALSE, fig.width=10, fig.height=8}
 word_cors %>%
   filter(item1 %in% c("risk", "social", "private")) %>%
   group_by(item1) %>%
@@ -234,7 +239,10 @@ word_cors %>%
   geom_bar(stat = "identity", show.legend = FALSE) +
   labs(title = "Pair-wise Correlation", x = NULL) +
   facet_wrap(~ item1, scales = "free") +
-  coord_flip()
+  coord_flip() +
+  theme(axis.text=element_text(size=12),
+        axis.title=element_text(size=14,face="bold"),
+        legend.text =element_text(size=12))
 ```
 
 "Private" and "sector" are strongly correlated and tend to appear together about 85% of the time.
@@ -315,7 +323,7 @@ The other cluster contains bigrams such as:
 * "financial exposure" and
 * "applicant provided".
 
-These are the kind of terms we'd expect to see in a cluster relating to **decisions on accreditation**!
+These are the kind of terms we'd expect to see in a cluster relating to **decisions on accreditation**.
 
 There are also a couple of smaller clusters: one relating to bigrams such as "fiduciary standard" and "funding allocation". Another one contains bigrams such as "climate resilient", "paradigm shift" and "sustainable development". It's a little harder to tell what these clusters represent because we have fewer "edges" to reason with.
 
@@ -332,6 +340,7 @@ There were a few smaller clusters and we'll get onto them in the next post, when
 For now, here are the top 2,400+ bigram edges in the gcfboardr dataset:
 
 ```{r bcors2}
+set.seed(6789)
 bigram_cors %>%
   filter(correlation > .40) %>%
   graph_from_data_frame() %>%
