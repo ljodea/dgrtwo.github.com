@@ -22,7 +22,7 @@ In this post, we'll look at bigrams and use network graphs to plot relationships
 
 A bigram is a pair of words which occur together in sequence, and a trigram is the same concept extended to word triplets. "N-grams" are a generalization of this concept, although in practice most analyses restrict the "n" to a maximum of three. 
 
-Let's load the dataset:
+Let's load the gcfboardr dataset ([if you haven't already installed it in R, click here for instructions](http://state.gy/r/GCF_board_documents_to_tidy_data/):
 
 
 {% highlight r %}
@@ -34,7 +34,7 @@ library(gcfboardr)
 data("gcfboard_docs")
 {% endhighlight %}
 
-And let's unnest bigrams from the gcfboardr dataset using the `unnest_tokens` function from the tidytext package. 
+And let's unnest bigrams from using the `unnest_tokens` function from the tidytext package. 
 
 
 {% highlight r %}
@@ -109,7 +109,7 @@ Now out data is tidy!
 
 ### Bigram Frequencies
 
-As well as for single words frequencies, we can also use Term-Frequency-Inverse-Document-Frequency (see the [notes here for definitions](http://state.gy/r/exploratory_data_analysis_of_board_documents_at_the_green_climate_fund/)) as a rule of thumb to work out which bigrams are particularly associated with particular meetings.
+Just as we did for single word analysis, we can also use Term-Frequency-Inverse-Document-Frequency (see the [notes here for definitions](http://state.gy/r/exploratory_data_analysis_of_board_documents_at_the_green_climate_fund/)) as a rule of thumb to work out which bigrams are particularly associated with particular meetings.
 
 
 {% highlight r %}
@@ -124,7 +124,7 @@ plot_bigram_tf_idf <- bigram_tf_idf %>%
   mutate(bigram = factor(bigram, levels = rev(unique(bigram))))
 {% endhighlight %}
 
-Let's plot top bigrams by frequency faceting to select a few meetings:  
+Let's plot top bigrams by frequency, faceting to select a few meetings:  
 
 
 
@@ -165,7 +165,7 @@ We can provide an answer by checking correlation between word pairs using the `p
 # load widyr
 library(widyr)
 
-# hack a lookup table with documents as sections
+# lookup table with documents as sections
 lookup <- gcfboard_docs %>% 
   group_by(meeting, title) %>%
   summarise(key = n()) %>% 
@@ -202,19 +202,15 @@ gcf_section_words <- gcfboard_docs %>%
 
 It looks like the words "paradigm" and "shift" occur in the same document together 95% of the time, and only occur apart about 5% of the time. 
 
-Now that we have a word correlation table, we can look up specific correlations among words. For example, let's look at pairwise correlations for the words "risk", "social" and "private".
-
-![center](/figs/2017-4-27-ngrams_correlation_green_climate_fund/wordcors-1.png)
-
-"Private" and "sector" are strongly correlated and tend to appear together about 85% of the time.
+Now that we have a word correlation table, with around 660,000 correlations, we can look up specific correlations among many words.
 
 ***
 
 ### Plotting Correlation with Network Graphs
 
-We can also look at pairwise correlation among words using network graphs. In the following network graphs, every point is a "node" -- and in this case they represent words or bigrams. Every line or arc represents an "edge", which represents a relationship between two nodes.
+We can also look at pairwise correlation among words using network graphs. In the following network graphs, every point is a "node" -- and in this case they represent words or bigrams. Every line or arc is an "edge", which represents a relationship between two nodes.
 
-To see what this means, let's plot pairwise correlations using the word correlations data table we built previously. Let's represent the strength of the correlation between two words by both the thickness and colour of the "edges" -- in this case blue lines -- connecting each word. In the following graph, a thick dark blue edge denotes, such as exists between the words "priveleges" and "immunities" denotes strong correlation (above 95%). Thinner lighter-blue edges represent relatively weaker correlation.
+To see what this means, let's plot pairwise correlations using the word correlations data table we built previously. Let's represent the strength of the correlation between two words by both the thickness and colour of the "edges" -- in this case blue lines -- connecting each word. In the following graph, a thick dark blue "edge" denotes strong correlation (above 95%). Thinner lighter-blue edges represent relatively weaker correlation.
 
 
 {% highlight r %}
@@ -289,7 +285,7 @@ Meanwhile, creating network graphs from pairwise bigram correlations uncovered t
 
 There were a few smaller clusters and we'll get onto them in the next post, when we'll practice topic modelling algorithms. Standby for the link!
 
-For now, here are the top 2,400+ bigram edges in the gcfboardr dataset:
+For now, here are 2,500 bigram edges in the gcfboardr dataset:
 
 ![center](/figs/2017-4-27-ngrams_correlation_green_climate_fund/bcors2-1.png)
 

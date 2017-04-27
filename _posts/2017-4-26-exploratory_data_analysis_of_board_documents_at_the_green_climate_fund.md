@@ -11,7 +11,7 @@ comments: true
 
 
 
-Recently, I harvested over 500,000 lines of text from 500+ Green Climate Fund board documents. Because of this, I've  built a data-only R package called `gcfboardr`, so that anyone can make use of the corpus I've created without going through the harvesting process.
+Recently, I harvested over 500,000 lines of text from 500+ Green Climate Fund board documents. Because of this, I've  built a data-only R package called `gcfboardr`, so that anyone can make use of the corpus I've created.
 
 To build the data, I used documents produced for board meetings, available [here on the GCF website](http://http://www.greenclimate.fund/boardroom/board-meetings/documents). I've read some of these documents before, and it occured me that the Fund will produce more text than anyone can read in a lifetime. So I've used my natural curiosity about the Fund as a motivating project with which to practice the tidytext approach to text analysis in R and gain deeper insight into the Fund.
 
@@ -296,7 +296,7 @@ Great! This confirms our intuition that B.16 is more similar to the meetings whi
 
 ### Wrap Up
 
-That's enough for one post! For more ideas about how to analyze this data set beyond single-word analysis, and for a lot more on correlation, standy by for my next post on ngrams. I will post the link here as soon as it's available.
+That's enough for one post! For more ideas about how to analyze this data set, and [for a lot more on correlation, see my post on ngrams](http://state.gy/r/ngrams_correlation_green_climate_fund/). 
 
 ***
 
