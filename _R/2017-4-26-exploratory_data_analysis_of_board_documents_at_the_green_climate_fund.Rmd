@@ -34,7 +34,7 @@ gcfboard_docs <- gcfboard_docs %>%
 
 Recently, I harvested over 500,000 lines of text from 500+ Green Climate Fund board documents. Because of this, I've  built a data-only R package called `gcfboardr`, so that anyone can make use of the corpus I've created without going through the harvesting process.
 
-To build the data, I used documents produced for board meetings, available [here on the GCF website](http://http://www.greenclimate.fund/boardroom/board-meetings/documents). I've read some of these documents before, and it occured me that the Fund will produce more text than anyone can read in a lifetime. So I've used my natural curiosity about the Fund as a motivating project with which to practice the tidytext approach to text mining and gain deeper insight into the Fund.
+To build the data, I used documents produced for board meetings, available [here on the GCF website](http://http://www.greenclimate.fund/boardroom/board-meetings/documents). I've read some of these documents before, and it occured me that the Fund will produce more text than anyone can read in a lifetime. So I've used my natural curiosity about the Fund as a motivating project with which to practice the tidytext approach to text analysis in R and gain deeper insight into the Fund.
 
 In this post, I'm going to show what can be done with gcfboardr.
 
@@ -112,7 +112,9 @@ gcf_tidy %>%
   xlab(NULL) +
   scale_fill_gradient() +
   coord_flip() +
-  labs(title = "Top words by count in GCF Board Meeting Documents")
+  labs(title = "Top words by count in GCF Board Meeting Documents") +
+  theme(axis.text=element_text(size=12),
+        axis.title=element_text(size=14,face="bold")) 
 ```
 
 It looks like some words appear very often, in particular words associated with the name of the fund, although the word "green" is relatively less used than are the words "climate" and "fund".
@@ -176,7 +178,9 @@ gcf_tidy2 %>%
   xlab(NULL) +
   scale_fill_gradient() +
   coord_flip() +
-  labs(title = "Top words by count in GCF Board Meeting Documents, Filtered")
+  labs(title = "Top words by count in GCF Board Meeting Documents, Filtered") +
+  theme(axis.text=element_text(size=12),
+        axis.title=element_text(size=14,face="bold")) 
 ```
 
 Wow! It turns out that the word "climate", independent of usage as part of the name of the Fund, is the third most common word. 
@@ -287,7 +291,8 @@ plot_bm %>%
   theme(axis.ticks.x = element_blank()) +
   theme(axis.text=element_text(size=12),
         axis.title=element_text(size=14,face="bold"),
-        legend.text =element_text(size=12)) + 
+        legend.text =element_text(size=12),
+        strip.text.x = element_text(size = 12, face="bold")) + 
   coord_flip() +
   facet_wrap(~meeting, ncol = 4, scales = "free")
 ```
@@ -334,10 +339,11 @@ frequency %>%
   scale_color_gradient(limits = c(0, 0.001), low = "darkslategray4", high = "gray75") +
   facet_wrap(~meeting, ncol = 1) +
   theme(legend.position="none") +
-  labs(title = "Word Correlations: B.16 (y) and Other Meetings (x)", y = "B.16", x = NULL) +
+  labs(title = "Word Correlations: B.16 (y) ~ Other Meetings (x)", y = "B.16", x = NULL) +
   theme(axis.text=element_text(size=12),
         axis.title=element_text(size=14,face="bold"),
-        legend.text =element_text(size=12))
+        legend.text =element_text(size=12),
+        strip.text = element_text(size=14,face="bold"))
 ```
 
 We can also see that:

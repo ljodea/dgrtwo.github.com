@@ -13,7 +13,7 @@ comments: true
 
 Recently, I harvested over 500,000 lines of text from 500+ Green Climate Fund board documents. Because of this, I've  built a data-only R package called `gcfboardr`, so that anyone can make use of the corpus I've created without going through the harvesting process.
 
-To build the data, I used documents produced for board meetings, available [here on the GCF website](http://http://www.greenclimate.fund/boardroom/board-meetings/documents). I've read some of these documents before, and it occured me that the Fund will produce more text than anyone can read in a lifetime. So I've used my natural curiosity about the Fund as a motivating project with which to practice the tidytext approach to text mining and gain deeper insight into the Fund.
+To build the data, I used documents produced for board meetings, available [here on the GCF website](http://http://www.greenclimate.fund/boardroom/board-meetings/documents). I've read some of these documents before, and it occured me that the Fund will produce more text than anyone can read in a lifetime. So I've used my natural curiosity about the Fund as a motivating project with which to practice the tidytext approach to text analysis in R and gain deeper insight into the Fund.
 
 In this post, I'm going to show what can be done with gcfboardr.
 
@@ -54,9 +54,9 @@ glimpse(gcfboard_docs)
 {% highlight text %}
 ## Observations: 490,537
 ## Variables: 3
-## $ title   <fctr> Sixteenth Meeting of the Board, Sixteenth Meeting of the Board, Sixteenth Meet...
-## $ meeting <fctr> B.16, B.16, B.16, B.16, B.16, B.16, B.16, B.16, B.16, B.16, B.16, B.16, B.16, ...
 ## $ text    <chr> "Date:  March ", "Reference: ", "Sixteenth Meeting of the Board", " –  April ",...
+## $ meeting <fctr> B.16, B.16, B.16, B.16, B.16, B.16, B.16, B.16, B.16, B.16, B.16, B.16, B.16, ...
+## $ title   <fctr> Sixteenth Meeting of the Board, Sixteenth Meeting of the Board, Sixteenth Meet...
 {% endhighlight %}
 
 We have almost 500,000 observations of three variables, in which every observation is a line from an original document. How many documents are there per meeting?
@@ -88,8 +88,8 @@ glimpse(gcf_tidy)
 {% highlight text %}
 ## Observations: 2,661,944
 ## Variables: 3
-## $ title   <fctr> Roles and Responsibilities of the Board, Annotations to the Provisional Agenda...
 ## $ meeting <fctr> B.01, B.01, B.01, B.01, B.01, B.01, B.01, B.01, B.01, B.01, B.01, B.01, B.01, ...
+## $ title   <fctr> Roles and Responsibilities of the Board, Annotations to the Provisional Agenda...
 ## $ word    <chr> "meritbased", "contd", "realestate", "worldclass", "spacious", "itower", "itowe...
 {% endhighlight %}
 

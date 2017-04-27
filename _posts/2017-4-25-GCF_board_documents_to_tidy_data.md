@@ -204,9 +204,9 @@ For ideas on how to use the data set for analysis, see my post on [exploratory d
 
 1. Users should be aware that there are some issues with the data from B.03, a board meeting which was documented using an unknown process for creating Pdf documents. This set of Pdf documents caused some parsing problems for the `pdftools` package, resulting in garbled word tokens. As such, gcfboardr does not contain any documents from the B.03 board meeting.
 
-2. Zipf's Law is a simple power law:
+2. On github, I've also included the R script documenting how I harvested all the files from the GCF website and pulled the text out of them. The script includes a few functions I wrote, such as the pdf_date function, which makes it easier to pull "creation date" metadata out of pdfs, using a method which works well with the map family of functions from purrr. This means that unlike the pdf_info function in the pdftools package, it can be used when building a data frame using dplyr. You can find that script [here](https://github.com/ljodea/gcfboardr/blob/master/data-raw/prep_data.R).
+
+
+3. Zipf's Law is a simple power law:
 
 $$f(k;s,N)=\frac{1/k^s}{\sum_{n=1}^N (1/n^s)}$$
-
-
-3. On github, I've also included the R script documenting how I harvested all the files from the GCF website and pulled the text out of them. The script includes a few functions I wrote, such as the pdf_date function, which makes it easier to pull "creation date" metadata out of pdfs, using a method which works well with the map family of functions from purrr. This means that unlike the pdf_info function in the pdftools package, it can be used when building a data frame using dplyr. You can find that script [here](https://github.com/ljodea/gcfboardr/blob/master/data-raw/prep_data.R).
