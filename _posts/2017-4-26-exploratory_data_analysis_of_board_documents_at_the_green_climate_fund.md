@@ -217,7 +217,7 @@ That's a lot of acronyms! If we look into the board documents themselves, we can
 * At B.16, the top term is "geeref", which is the ["Global Energy Efficiency and Renewable Energy Fund"](http://geeref.com/), a Public-Private Partnership which makes equity investments in clean energy in developing countries.
 * At B.06, where the top term is "iiu", this refers to the ["Independent Integrity Unit" (IIU)](http://www.greenclimate.fund/independent-integrity-unit), which is one of three accountability units at the fund. 
 
-This means that relative to other board meetings, the IIU and GEEREF were a particularly important topics at the sixth and sixteenth meetings of the board respectively.
+This means that relative to other board meetings, the IIU and GEEREF were particularly important topics at the sixth and sixteenth meetings of the board respectively.
 
 ***
 
@@ -240,7 +240,7 @@ We can also see that:
 * B.10 was relatively more concerned with "accountability" and "accreditation" than was B.16,
 * B.15 was relatively more concerned with "applicants" to the fund and contains many references to "samoa", where the meeting was held.
 
-By looking at the spread of the data, we can also see that correlation between word frequencies at B.16 and at earlier meetings converges over time. Between B.16 and B.01 the word frequencies are dispered, while the B.16-B.10 pair is a little less dispersed, and the frequencies for B.15 appear to converge towards those for B.16.
+By looking at the spread of the data, we can also see that correlation between word frequencies at B.16 and at earlier meetings increases over time. Between B.16 and B.01 the word frequencies are dispered, while the B.16-B.10 pair is a little less dispersed, and the frequencies for B.15 appear to converge towards those for B.16.
 
 We can confirm this intuition by looking at Pearson's product-moment correlations between B.16 and previous meetings:
 

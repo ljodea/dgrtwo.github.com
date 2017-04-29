@@ -22,7 +22,7 @@ In this post, we'll look at bigrams and use network graphs to plot relationships
 
 A bigram is a pair of words which occur together in sequence, and a trigram is the same concept extended to word triplets. "N-grams" are a generalization of this concept, although in practice most analyses restrict the "n" to a maximum of three. 
 
-Let's load the gcfboardr dataset ([if you haven't already installed it in R, click here for instructions](http://state.gy/r/GCF_board_documents_to_tidy_data/):
+Let's load the gcfboardr dataset ([if you haven't already installed it in R, click here for instructions](http://state.gy/r/GCF_board_documents_to_tidy_data/)):
 
 
 {% highlight r %}
@@ -34,7 +34,7 @@ library(gcfboardr)
 data("gcfboard_docs")
 {% endhighlight %}
 
-And let's unnest bigrams from using the `unnest_tokens` function from the tidytext package. 
+And let's unnest bigrams instead of single words by specifying the `token = "ngrams"` and `n = 2` arguments to the `unnest_tokens` function from the tidytext package. 
 
 
 {% highlight r %}
@@ -88,22 +88,22 @@ bigrams_united
 
 {% highlight text %}
 ## # A tibble: 1,276,503 × 3
-##                  bigram meeting                                      title
-## *                 <chr>  <fctr>                                     <fctr>
-## 1      additional rules    B.01 Additional Rules of Procedure of the Board
-## 2             board gcf    B.01 Additional Rules of Procedure of the Board
-## 3        august meeting    B.01 Additional Rules of Procedure of the Board
-## 4          board august    B.01 Additional Rules of Procedure of the Board
-## 5         august geneva    B.01 Additional Rules of Procedure of the Board
-## 6    geneva switzerland    B.01 Additional Rules of Procedure of the Board
-## 7    switzerland agenda    B.01 Additional Rules of Procedure of the Board
-## 8           agenda item    B.01 Additional Rules of Procedure of the Board
-## 9              item gcf    B.01 Additional Rules of Procedure of the Board
-## 10 recommended decision    B.01 Additional Rules of Procedure of the Board
+##                bigram meeting                                                    title
+## *               <chr>  <fctr>                                                   <fctr>
+## 1         board march    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
+## 2           march rev    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
+## 3          rev songdo    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
+## 4      songdo incheon    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
+## 5    incheon republic    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
+## 6   korea provisional    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
+## 7  provisional agenda    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
+## 8         agenda item    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
+## 9      board proposal    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
+## 10     chairs summary    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
 ## # ... with 1,276,493 more rows
 {% endhighlight %}
 
-Now out data is tidy!
+Now our data is tidy!
 
 ***
 
@@ -124,7 +124,7 @@ plot_bigram_tf_idf <- bigram_tf_idf %>%
   mutate(bigram = factor(bigram, levels = rev(unique(bigram))))
 {% endhighlight %}
 
-Let's plot top bigrams by frequency, faceting to select a few meetings:  
+Let's plot top bigrams by frequency, selecting a few meetings:  
 
 
 
@@ -158,7 +158,7 @@ Knowing how often words appear together is neat but not very useful because some
 
 Avoiding such problematic words when we look at bigrams involves asking how often words appear together relative to how often they appear separately. 
 
-We can provide an answer by checking correlation between word pairs using the `pairwise_cor` function from the widyr package:
+We can provide an answer by checking correlation between word pairs using the `pairwise_cor` function from the widyr package. `pairwise_cor` checks how often a word appears in any single section of a corpus -- in this case, we're using documents to represent sections -- *with* other words, compared to how often it appears in any single section *without* those other words.
 
 
 {% highlight r %}
@@ -178,9 +178,17 @@ gcf_section_words <- gcfboard_docs %>%
   select(-meeting, -title) %>% 
   unnest_tokens(word, text) %>%
   filter(!word %in% stop_words$word)
+
+# find their correlations
+word_cors <- gcf_section_words %>%
+  group_by(word) %>%
+  filter(n() >= 400) %>%
+  pairwise_cor(word, key, sort = TRUE) %>% 
+  filter(correlation != "Inf") %>% 
+  ungroup()
+word_cors
 {% endhighlight %}
 
-`pairwise_cor` checks how often a word appears in any single section of a corpus -- in this case, we're using documents to represent sections -- *with* other words, compared to how often it appears in any single section *without* those other words.
 
 
 {% highlight text %}
@@ -208,7 +216,7 @@ Now that we have a word correlation table, with around 660,000 correlations, we 
 
 ### Plotting Correlation with Network Graphs
 
-We can also look at pairwise correlation among words using network graphs. In the following network graphs, every point is a "node" -- and in this case they represent words or bigrams. Every line or arc is an "edge", which represents a relationship between two nodes.
+We can also look at pairwise correlation among words using network graphs. In the following plots, every point is a "node" -- and in this case they represent words or bigrams. Every line or arc is an "edge", which represents a relationship between two nodes.
 
 To see what this means, let's plot pairwise correlations using the word correlations data table we built previously. Let's represent the strength of the correlation between two words by both the thickness and colour of the "edges" -- in this case blue lines -- connecting each word. In the following graph, a thick dark blue "edge" denotes strong correlation (above 95%). Thinner lighter-blue edges represent relatively weaker correlation.
 
