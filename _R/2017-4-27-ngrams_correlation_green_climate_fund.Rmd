@@ -184,7 +184,7 @@ Interesting! Risk bigrams in which the word "risk" comes first tend to refer to 
 
 ***
 
-### Correlation 
+### Pairwise Correlation 
 
 Knowing how often words appear together is neat but not very useful because some words, such as "project", appear so often that it's not clear whether a bigram involving them can tell us anything. One example you may have noticed above is "project page" -- it occurs often and it is meaningless.
 
@@ -230,6 +230,8 @@ Now that we have a word correlation table, with around 660,000 correlations, we 
 
 We can also look at pairwise correlation among words using network graphs. In the following plots, every point is a "node" -- and in this case they represent words or bigrams. Every line or arc is an "edge", which represents a relationship between two nodes.
 
+#### Among Words 
+
 To see what this means, let's plot pairwise correlations using the word correlations data table we built previously. Let's represent the strength of the correlation between two words by both the thickness and colour of the "edges" -- in this case blue lines -- connecting each word. In the following graph, a thick dark blue "edge" denotes strong correlation (above 95%). Thinner lighter-blue edges represent relatively weaker correlation.
 
 ```{r networkgraph, echo=TRUE, fig.width=9}
@@ -250,8 +252,9 @@ word_cors %>%
 It looks like the word "ecosystem" is strongly related to a cluster of many other words (in the bottom left of the diagram above), which relate to the core work of the Fund. No other word has so many edges emerging from it.
 
 ***
+#### Among Bigrams
 
-Now let's use network graphs to look at pairwise correlation among different bigrams.
+Now let's use network graphs to look at pairwise correlation among different bigrams. We'll compute correlations *among bigrams* this time, rather than words, to calculate how often 2 different bigrams appear in a document together, compared to how often they appear separately. 
 
 ```{r bigramcors}
 # create tidy df of bigrams in each document 

@@ -88,18 +88,18 @@ bigrams_united
 
 {% highlight text %}
 ## # A tibble: 1,276,503 × 3
-##                bigram meeting                                                    title
-## *               <chr>  <fctr>                                                   <fctr>
-## 1         board march    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
-## 2           march rev    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
-## 3          rev songdo    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
-## 4      songdo incheon    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
-## 5    incheon republic    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
-## 6   korea provisional    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
-## 7  provisional agenda    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
-## 8         agenda item    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
-## 9      board proposal    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
-## 10     chairs summary    B.12 2016 Work Plan of the Board: Proposal from the Co-Chairs
+##                  bigram meeting                                      title
+## *                 <chr>  <fctr>                                     <fctr>
+## 1      additional rules    B.01 Additional Rules of Procedure of the Board
+## 2             board gcf    B.01 Additional Rules of Procedure of the Board
+## 3        august meeting    B.01 Additional Rules of Procedure of the Board
+## 4          board august    B.01 Additional Rules of Procedure of the Board
+## 5         august geneva    B.01 Additional Rules of Procedure of the Board
+## 6    geneva switzerland    B.01 Additional Rules of Procedure of the Board
+## 7    switzerland agenda    B.01 Additional Rules of Procedure of the Board
+## 8           agenda item    B.01 Additional Rules of Procedure of the Board
+## 9              item gcf    B.01 Additional Rules of Procedure of the Board
+## 10 recommended decision    B.01 Additional Rules of Procedure of the Board
 ## # ... with 1,276,493 more rows
 {% endhighlight %}
 
@@ -152,7 +152,7 @@ Interesting! Risk bigrams in which the word "risk" comes first tend to refer to 
 
 ***
 
-### Correlation 
+### Pairwise Correlation 
 
 Knowing how often words appear together is neat but not very useful because some words, such as "project", appear so often that it's not clear whether a bigram involving them can tell us anything. One example you may have noticed above is "project page" -- it occurs often and it is meaningless.
 
@@ -218,6 +218,8 @@ Now that we have a word correlation table, with around 660,000 correlations, we 
 
 We can also look at pairwise correlation among words using network graphs. In the following plots, every point is a "node" -- and in this case they represent words or bigrams. Every line or arc is an "edge", which represents a relationship between two nodes.
 
+#### Among Words 
+
 To see what this means, let's plot pairwise correlations using the word correlations data table we built previously. Let's represent the strength of the correlation between two words by both the thickness and colour of the "edges" -- in this case blue lines -- connecting each word. In the following graph, a thick dark blue "edge" denotes strong correlation (above 95%). Thinner lighter-blue edges represent relatively weaker correlation.
 
 
@@ -240,8 +242,9 @@ word_cors %>%
 It looks like the word "ecosystem" is strongly related to a cluster of many other words (in the bottom left of the diagram above), which relate to the core work of the Fund. No other word has so many edges emerging from it.
 
 ***
+#### Among Bigrams
 
-Now let's use network graphs to look at pairwise correlation among different bigrams.
+Now let's use network graphs to look at pairwise correlation among different bigrams. We'll compute correlations *among bigrams* this time, rather than words, to calculate how often 2 different bigrams appear in a document together, compared to how often they appear separately. 
 
 
 

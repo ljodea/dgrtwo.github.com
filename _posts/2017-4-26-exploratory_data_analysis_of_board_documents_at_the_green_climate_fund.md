@@ -182,6 +182,8 @@ At earlier meetings, establishing a secretariat was priority number one, and we 
 
 You'll notice that the bare frequency plot emphasises the high-frequency changes to the words "secretariat" and "project", whereas the log10 plot of word frequency really helps us see what's happening at the low-end of the frequency range. The square-root coordinate transform preserves some of the perspective of both the other plots, and might be the most useful plot of the three.
 
+You can also [view an interactive shiny app version of the above graph, and search for terms in order to view their frequency over time](https://ljodea.shinyapps.io/gcf_ngram_frequency_explorer/).
+
 ***
 
 ### Word Frequency
@@ -297,6 +299,8 @@ Great! This confirms our intuition that B.16 is more similar to the meetings whi
 ### Wrap Up
 
 That's enough for one post! For more ideas about how to analyze this data set, and [for a lot more on correlation, see my post on ngrams](http://state.gy/r/ngrams_correlation_green_climate_fund/). 
+
+* Check out [this interactive shiny app which lets you visualize terms by frequency over time](https://ljodea.shinyapps.io/gcf_ngram_frequency_explorer/).
 
 ***
 
