@@ -5,7 +5,7 @@ tags: [about]
 comments: false
 ---
 
-I am a Data Scientist living in Seoul. In June 2016 I received my SM in Management Studies from the MIT Sloan School of Management, and in February 2017 I received my MBA from the Graduate School of Business At Seoul National University. My interests include statistics, data analysis, infrastructure, risk, and programming in R.
+I am a Data Scientist living in Asia. In June 2016 I received my SM in Management Studies from the MIT Sloan School of Management, and in February 2017 I received my MBA from the Graduate School of Business At Seoul National University. My interests include statistical learning, data engineering, infrastructure, risk, and programming in Python, Scala, Bash, R and SQL.
 
 Software
 ============
